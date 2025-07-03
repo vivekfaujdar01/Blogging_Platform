@@ -1,11 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const { getBlogs, createBlog } = require('../controllers/blogController');
+const {
+  getBlogs,
+  getSingleBlog,   // 👈 Add this
+  createBlog
+} = require('../controllers/blogController');
 
 router.get('/', getBlogs);
+router.get('/:id', getSingleBlog);  // 👈 NEW route
 router.post('/', createBlog);
 
 module.exports = router;
+
 // This code defines the routes for the blog functionality in an Express application.
 // It imports the necessary modules, sets up a router, and defines two routes:
 // 1. A GET route at the root path ('/') that retrieves all blogs by calling the `getBlogs` controller function.

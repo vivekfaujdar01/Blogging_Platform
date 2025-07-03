@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+* {
+  z-index: 0 !important;
+}
+body {
+  @apply font-sans bg-gradient-to-tr from-[#f8f9fa] to-[#e0f7fa] dark:from-gray-900 dark:to-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300;
+}

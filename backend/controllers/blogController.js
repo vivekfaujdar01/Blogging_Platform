@@ -1,24 +1,32 @@
-const Blog = require('../models/Blog');
+const Blog = require("../models/blogModel");
 
-// @desc    Get all blogs
-exports.getBlogs = async (req, res) => {
+// GET all blogs
+const getBlogs = async (req, res) => {
+  const blogs = await Blog.find().sort({ createdAt: -1 });
+  res.status(200).json(blogs);
+};
+
+// ✅ GET a single blog by ID
+const getSingleBlog = async (req, res) => {
   try {
-    const blogs = await Blog.find().sort({ createdAt: -1 });
-    res.json(blogs);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const blog = await Blog.findById(req.params.id);
+    if (!blog) return res.status(404).json({ message: "Blog not found" });
+    res.status(200).json(blog);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching blog", error });
   }
 };
 
-// @desc    Create a new blog
-exports.createBlog = async (req, res) => {
+// POST create new blog
+const createBlog = async (req, res) => {
   const { title, content, author } = req.body;
+  const newBlog = new Blog({ title, content, author });
+  const savedBlog = await newBlog.save();
+  res.status(201).json(savedBlog);
+};
 
-  try {
-    const newBlog = new Blog({ title, content, author });
-    await newBlog.save();
-    res.status(201).json(newBlog);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
+module.exports = {
+  getBlogs,
+  getSingleBlog,  // ✅ Exported properly
+  createBlog
 };
