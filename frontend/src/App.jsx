@@ -25,12 +25,14 @@ function App() {
   }, []);
 
   return (
-    <div className={`min-h-screen ${dark ? "dark" : ""}`}>
+    <div className={`relative z-10 min-h-screen ${dark ? "dark" : ""}`}>
       <Router>
+        {/* Particle background */}
         <ParticlesBackground />
 
-        {/* Wrapper must be relative and z-10 */}
-        <div className="relative z-10 min-h-screen bg-gradient-to-br from-[#eef2f3] to-[#dff9fb] dark:from-gray-900 dark:to-gray-800 transition-all">
+        {/* Main content wrapper */}
+        <div className="relative z-10 bg-gradient-to-br from-[#eef2f3] to-[#dff9fb] dark:from-gray-900 dark:to-gray-800 transition-all min-h-screen">
+          
           {/* Header */}
           <header className="flex justify-between items-center px-6 py-4 bg-white/80 dark:bg-gray-900 shadow-md backdrop-blur-lg rounded-b-xl mb-8">
             <h1 className="text-3xl font-bold text-blue-600 dark:text-white flex items-center gap-2">
@@ -45,8 +47,8 @@ function App() {
             </button>
           </header>
 
-          {/* Page Routes */}
-          <main className="max-w-6xl mx-auto px-4 space-y-12">
+          {/* Routes */}
+          <main className="max-w-6xl mx-auto px-4 space-y-12 pb-16">
             <Routes>
               <Route
                 path="/"
