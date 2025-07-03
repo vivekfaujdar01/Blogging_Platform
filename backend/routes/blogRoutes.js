@@ -3,12 +3,14 @@ const router = express.Router();
 const {
   getBlogs,
   getSingleBlog,   // 👈 Add this
-  createBlog
+  createBlog,
+  deleteBlog
 } = require('../controllers/blogController');
 
 router.get('/', getBlogs);
 router.get('/:id', getSingleBlog);  // 👈 NEW route
 router.post('/', createBlog);
+router.delete('/:id', deleteBlog);
 
 module.exports = router;
 
