@@ -2,15 +2,17 @@ const express = require('express');
 const router = express.Router();
 const {
   getBlogs,
-  getSingleBlog,   // 👈 Add this
+  getSingleBlog,  
   createBlog,
-  deleteBlog
+  deleteBlog,
+  updateBlog,  
 } = require('../controllers/blogController');
 
 router.get('/', getBlogs);
 router.get('/:id', getSingleBlog);  // 👈 NEW route
 router.post('/', createBlog);
 router.delete('/:id', deleteBlog);
+router.put('/:id', updateBlog);
 
 module.exports = router;
 
