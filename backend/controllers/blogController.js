@@ -38,9 +38,33 @@ const deleteBlog = async (req, res) => {
   }
 };
 
+// UPDATE a blog
+const updateBlog = async (req, res) => {
+  try {
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      req.params.id,
+      {
+        title: req.body.title,
+        content: req.body.content,
+        author: req.body.author,
+      },
+      { new: true } // return updated doc
+    );
+
+    if (!updatedBlog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+    res.json(updatedBlog);
+  } catch (err) {
+    res.status(500).json({ message: "Error updating blog", error: err });
+  }
+};
+
 module.exports = {
   getBlogs,
-  getSingleBlog,  // ✅ Exported properly
+  getSingleBlog,  
   createBlog,
   deleteBlog,
+  updateBlog,  
 };

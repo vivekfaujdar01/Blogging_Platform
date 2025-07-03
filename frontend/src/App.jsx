@@ -4,6 +4,7 @@ import { ThemeContext } from "./ThemeContext";
 import CreateBlog from "./CreateBlog";
 import BlogList from "./BlogList";
 import BlogDetail from "./BlogDetail";
+import EditBlog from "./EditBlog";
 
 function App() {
   const { dark, setDark } = useContext(ThemeContext);
@@ -24,15 +25,15 @@ function App() {
   }, []);
 
   return (
-    <div className={`relative min-h-screen overflow-x-hidden ${dark ? "dark" : ""}`}>
-      {/* 🔮 Animated gradient background */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 
-        dark:from-gray-800 dark:via-gray-900 dark:to-black 
-        bg-[length:200%_200%] animate-gradientShift opacity-30" />
+    <Router>
+      <div className={`relative min-h-screen overflow-x-hidden ${dark ? "dark" : ""}`}>
+        {/* 🔮 Animated gradient background */}
+        <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 
+          dark:from-gray-800 dark:via-gray-900 dark:to-black 
+          bg-[length:200%_200%] animate-gradientShift opacity-30" />
 
-      {/* Main content above background */}
-      <div className="relative z-10">
-        <Router>
+        {/* Main content above background */}
+        <div className="relative z-10">
           {/* Header */}
           <header className="flex justify-between items-center px-6 py-4 bg-white/80 dark:bg-gray-900 shadow-md backdrop-blur-lg rounded-b-xl mb-8">
             <h1 className="text-3xl font-bold text-blue-600 dark:text-white flex items-center gap-2">
@@ -60,11 +61,12 @@ function App() {
                 }
               />
               <Route path="/blog/:id" element={<BlogDetail />} />
+              <Route path="/edit/:id" element={<EditBlog />} />
             </Routes>
           </main>
-        </Router>
+        </div>
       </div>
-    </div>
+    </Router>
   );
 }
 
