@@ -1,73 +1,55 @@
-// ParticlesBackground.jsx
-import { useEffect, useContext } from "react";
-import { ThemeContext } from "./ThemeContext";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
+import { useCallback } from "react";
 
 const ParticlesBackground = () => {
-  const { dark } = useContext(ThemeContext);
-
-  useEffect(() => {
-    if (window.pJSDom.length > 0) {
-      window.pJSDom[0].pJS.fn.vendors.destroypJS(); // remove previous particles
-      window.pJSDom = [];
-    }
-
-    window.particlesJS("particles-js", {
-      particles: {
-        number: {
-          value: 60,
-          density: {
-            enable: true,
-            value_area: 800,
-          },
-        },
-        color: {
-          value: dark ? "#ffffff" : "#000000", // 🔁 Dynamic color
-        },
-        shape: {
-          type: "circle",
-        },
-        opacity: {
-          value: 0.15,
-        },
-        size: {
-          value: 3,
-        },
-        line_linked: {
-          enable: true,
-          distance: 120,
-          color: dark ? "#ffffff" : "#000000",
-          opacity: 0.2,
-          width: 1,
-        },
-        move: {
-          enable: true,
-          speed: 1.2,
-        },
-      },
-      interactivity: {
-        detect_on: "canvas",
-        events: {
-          onhover: {
-            enable: true,
-            mode: "repulse",
-          },
-        },
-        modes: {
-          repulse: {
-            distance: 100,
-            duration: 0.4,
-          },
-        },
-      },
-      retina_detect: true,
-    });
-  }, [dark]); // 🔁 Re-run effect on theme toggle
+  const particlesInit = useCallback(async (engine) => {
+    await loadFull(engine);
+  }, []);
 
   return (
-    <div
-      id="particles-js"
-      className="fixed top-0 left-0 w-full h-full z-0 pointer-events-none"
-    ></div>
+    <Particles
+      id="tsparticles"
+      init={particlesInit}
+      options={{
+        fullScreen: { enable: true, zIndex: -1 },
+        background: { color: { value: "transparent" } },
+        particles: {
+          number: {
+            value: 60,
+            density: { enable: true, value_area: 800 },
+          },
+          color: { value: "#5dade2" },
+          shape: { type: "circle" },
+          opacity: { value: 0.4, random: true },
+          size: { value: { min: 1, max: 5 }, random: true },
+          links: {
+            enable: true,
+            distance: 150,
+            color: "#5dade2",
+            opacity: 0.3,
+            width: 1,
+          },
+          move: {
+            enable: true,
+            speed: 2,
+            outModes: { default: "bounce" },
+          },
+        },
+        interactivity: {
+          events: {
+            onHover: { enable: true, mode: ["grab", "repulse"] },
+            onClick: { enable: true, mode: "push" },
+          },
+          modes: {
+            grab: { distance: 140, links: { opacity: 0.5 } },
+            repulse: { distance: 100 },
+            push: { quantity: 4 },
+          },
+        },
+        detectRetina: true,
+      }}
+    />
   );
 };
 
