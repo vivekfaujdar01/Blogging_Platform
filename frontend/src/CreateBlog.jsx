@@ -1,20 +1,27 @@
-import { useState } from "react";
+// ✅ CreateBlog.jsx (Updated with Auth Header)
+import { useState, useContext } from "react";
 import { motion } from "framer-motion";
+import { AuthContext } from "./AuthContext";
 
 function CreateBlog({ onBlogCreated }) {
+  const { user } = useContext(AuthContext);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!user || !user.token) return alert("You must be logged in to create a blog.");
 
     const newBlog = { title, content, author };
 
     try {
       const response = await fetch("http://localhost:5000/api/blogs", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
         body: JSON.stringify(newBlog),
       });
 
@@ -23,9 +30,13 @@ function CreateBlog({ onBlogCreated }) {
         setContent("");
         setAuthor("");
         onBlogCreated(); // refresh blog list
+      } else {
+        const error = await response.json();
+        alert(error.message || "Failed to create blog");
       }
     } catch (error) {
       console.error("Error creating blog:", error);
+      alert("Error creating blog.");
     }
   };
 

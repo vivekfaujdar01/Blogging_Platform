@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "./AuthContext";
 
 function BlogList({ blogs, searchQuery }) {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
   // 🧠 Filter based on search
   const filteredBlogs = blogs.filter((blog) => {
@@ -15,10 +17,14 @@ function BlogList({ blogs, searchQuery }) {
   });
 
   const handleDelete = async (id) => {
+    if (!user) return alert("You must be logged in to delete a blog.");
     if (!window.confirm("Are you sure you want to delete this blog?")) return;
     try {
       const response = await fetch(`http://localhost:5000/api/blogs/${id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
       });
 
       const data = await response.json();
@@ -65,7 +71,6 @@ function BlogList({ blogs, searchQuery }) {
               }}
               className="relative bg-blue-50/80 dark:bg-blue-900/30 backdrop-blur-lg rounded-2xl shadow-md border border-blue-200 dark:border-blue-700 p-6 transition-all duration-300"
             >
-              {/* Clickable area for detail page */}
               <div
                 onClick={() => navigate(`/blog/${blog._id}`)}
                 className="cursor-pointer"
@@ -81,23 +86,25 @@ function BlogList({ blogs, searchQuery }) {
                 </p>
               </div>
 
-              {/* 🗑️ Delete button */}
-              <button
-                onClick={() => handleDelete(blog._id)}
-                className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-md text-xs hover:bg-red-600 transition-colors duration-200"
-                title="Delete blog"
-              >
-                🗑️
-              </button>
+              {user && (
+                <>
+                  <button
+                    onClick={() => handleDelete(blog._id)}
+                    className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-md text-xs hover:bg-red-600 transition-colors duration-200"
+                    title="Delete blog"
+                  >
+                    🗑️
+                  </button>
 
-              {/* ✏️ Edit button */}
-              <button
-                onClick={() => navigate(`/edit/${blog._id}`)}
-                className="absolute top-2 left-2 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-white px-2 py-1 rounded-md text-sm shadow hover:from-blue-500 hover:to-blue-700 hover:scale-105 hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                title="Edit blog"
-              >
-                ✏️
-              </button>
+                  <button
+                    onClick={() => navigate(`/edit/${blog._id}`)}
+                    className="absolute top-2 left-2 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-white px-2 py-1 rounded-md text-sm shadow hover:from-blue-500 hover:to-blue-700 hover:scale-105 hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    title="Edit blog"
+                  >
+                    ✏️
+                  </button>
+                </>
+              )}
             </motion.div>
           ))}
         </div>
