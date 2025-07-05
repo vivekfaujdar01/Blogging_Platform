@@ -2,17 +2,22 @@ const express = require('express');
 const router = express.Router();
 const {
   getBlogs,
-  getSingleBlog,  
+  getSingleBlog,
   createBlog,
   deleteBlog,
-  updateBlog,  
+  updateBlog,
 } = require('../controllers/blogController');
 
+const { protect } = require('../middleware/authMiddleware'); // ✅ Import protect middleware
+
+// Public routes
 router.get('/', getBlogs);
-router.get('/:id', getSingleBlog);  // 👈 NEW route
-router.post('/', createBlog);
-router.delete('/:id', deleteBlog);
-router.put('/:id', updateBlog);
+router.get('/:id', getSingleBlog);
+
+// Protected routes (requires JWT)
+router.post('/', protect, createBlog);
+router.delete('/:id', protect, deleteBlog);
+router.put('/:id', protect, updateBlog);
 
 module.exports = router;
 
