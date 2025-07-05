@@ -4,7 +4,7 @@ import CreateBlog from "./CreateBlog";
 import BlogList from "./BlogList";
 import BlogDetail from "./BlogDetail";
 import EditBlog from "./EditBlog";
-
+import SearchBar from "./SearchBar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -46,21 +46,15 @@ function App() {
 
           {/* Main */}
           <main className="max-w-6xl mx-auto px-4 space-y-12">
-            <div className="max-w-3xl mx-auto mb-6">
-              <input
-                type="text"
-                placeholder="🔍 Search by title or author..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-900 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-              />
-            </div>
-
             <Routes>
               <Route
                 path="/"
                 element={
                   <>
+                    <SearchBar
+                      searchQuery={searchQuery}
+                      setSearchQuery={setSearchQuery}
+                    />
                     <CreateBlog onBlogCreated={fetchBlogs} />
                     <BlogList blogs={blogs} searchQuery={searchQuery} />
                   </>
