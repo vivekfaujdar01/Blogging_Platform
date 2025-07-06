@@ -9,8 +9,9 @@ import EditBlog from "./EditBlog";
 import SearchBar from "./SearchBar";
 import Register from "./Register";
 import Login from "./Login";
+import Profile from "./Profile";
 
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 function App() {
   const { dark, setDark } = useContext(ThemeContext);
@@ -37,15 +38,22 @@ function App() {
     <div className={`min-h-screen ${dark ? "dark" : ""}`}>
       <Router>
         <div className="relative z-10 bg-gradient-to-br from-[#eef2f3] to-[#dff9fb] dark:from-gray-900 dark:to-gray-800 transition-all min-h-screen">
+
           {/* Header */}
           <header className="flex justify-between items-center px-6 py-4 bg-white/80 dark:bg-gray-900 shadow-md backdrop-blur-lg rounded-b-xl mb-8">
             <Link to="/" className="text-3xl font-bold text-blue-600 dark:text-white flex items-center gap-2">
               📰 My MERN Blog
             </Link>
+
             <div className="flex items-center gap-4">
               {user ? (
                 <>
-                  <span className="text-sm text-blue-800 dark:text-blue-200">👤 {user.name || user.email}</span>
+                  <Link
+                    to="/profile"
+                    className="text-sm text-blue-800 dark:text-blue-200 hover:underline"
+                  >
+                    👤 {user.name || user.email}
+                  </Link>
                   <button
                     onClick={logout}
                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
@@ -59,6 +67,7 @@ function App() {
                   <Link to="/register" className="text-blue-500 hover:text-blue-700">Register</Link>
                 </>
               )}
+
               <button
                 onClick={() => setDark(!dark)}
                 className="p-2 bg-yellow-300 dark:bg-gray-700 rounded-full hover:scale-105 transition"
@@ -86,6 +95,7 @@ function App() {
               <Route path="/edit/:id" element={<EditBlog />} />
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/profile" element={user ? <Profile /> : <Login />} />
             </Routes>
           </main>
         </div>

@@ -27,7 +27,7 @@ function Login() {
 
       const data = await res.json();
       if (res.ok) {
-        login(data.user); // ✅ update context
+        login(data.user, data.token); // ✅ update context
         alert("Login successful!");
         navigate("/");
       } else {

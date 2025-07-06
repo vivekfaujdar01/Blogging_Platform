@@ -1,77 +1,122 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { AuthContext } from "./AuthContext";
 
-const EditBlog = () => {
+function EditBlog() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
+  const { user } = useContext(AuthContext);
+
+  const [blog, setBlog] = useState({
+    title: "",
+    content: "",
+  });
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/blogs/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        setTitle(data.title);
-        setContent(data.content);
-        setAuthor(data.author);
-      });
+    const fetchBlog = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/blogs/${id}`);
+        const data = await res.json();
+
+        if (res.ok) {
+          setBlog({ title: data.title, content: data.content });
+        } else {
+          setError(data.message || "Failed to fetch blog");
+        }
+      } catch (err) {
+        setError("Error fetching blog");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlog();
   }, [id]);
 
-  const handleUpdate = async (e) => {
+  const handleChange = (e) => {
+    setBlog({ ...blog, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const updatedBlog = { title, content, author };
+    if (!user || !user.token) {
+      alert("You must be logged in to edit blogs.");
+      return;
+    }
 
     try {
       const res = await fetch(`http://localhost:5000/api/blogs/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedBlog),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify(blog),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
-        navigate("/");
+        alert("Blog updated successfully!");
+        navigate(`/blog/${id}`);
       } else {
-        alert("Failed to update blog");
+        alert(data.message || "Failed to update blog");
       }
     } catch (err) {
-      console.error("Update error:", err);
+      alert("Error updating blog");
+      console.error(err);
     }
   };
 
+  if (loading)
+    return (
+      <p className="text-center mt-6 text-gray-700 dark:text-gray-200">
+        Loading...
+      </p>
+    );
+  if (error)
+    return (
+      <p className="text-center text-red-500 mt-6 dark:text-red-400">
+        {error}
+      </p>
+    );
+
   return (
-    <div className="max-w-3xl mx-auto p-6 mt-8 bg-white dark:bg-gray-900 rounded-xl shadow-md">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700 dark:text-white">✏️ Edit Blog</h2>
-      <form onSubmit={handleUpdate} className="space-y-4">
+    <div className="max-w-xl mx-auto mt-12 p-8 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 transition-colors duration-300">
+      <h2 className="text-3xl font-extrabold mb-6 text-blue-600 dark:text-blue-400 text-center">
+        Edit Blog
+      </h2>
+      <form onSubmit={handleSubmit} className="space-y-6">
         <input
           type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-3 rounded border border-gray-300 dark:border-gray-700 bg-white/80 dark:bg-gray-800"
+          name="title"
+          value={blog.title}
+          onChange={handleChange}
+          placeholder="Blog Title"
           required
+          className="w-full px-5 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
         />
         <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="w-full h-40 p-3 rounded border border-gray-300 dark:border-gray-700 bg-white/80 dark:bg-gray-800 resize-none"
+          name="content"
+          value={blog.content}
+          onChange={handleChange}
+          placeholder="Blog Content"
           required
-        />
-        <input
-          type="text"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-          className="w-full p-3 rounded border border-gray-300 dark:border-gray-700 bg-white/80 dark:bg-gray-800"
+          className="w-full px-5 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 h-48 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
         />
         <button
           type="submit"
-          className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition"
+          className="w-full bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-500 dark:to-blue-700 text-white py-3 rounded-lg font-semibold shadow hover:from-blue-700 hover:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-800 transition"
         >
-          ✅ Update Blog
+          Update Blog
         </button>
       </form>
     </div>
   );
-};
+}
 
 export default EditBlog;

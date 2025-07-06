@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Blog = require("../models/Blog"); // ✅ Add this to fetch blogs
 const jwt = require("jsonwebtoken");
 
 // 🔐 Generate JWT Token
@@ -19,7 +20,6 @@ const registerUser = async (req, res) => {
 
     const newUser = await User.create({ name, email, password });
 
-    // ✅ Return structured response
     res.status(201).json({
       user: {
         _id: newUser._id,
@@ -44,7 +44,6 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // ✅ Return structured response
     res.json({
       user: {
         _id: user._id,
@@ -58,7 +57,23 @@ const loginUser = async (req, res) => {
   }
 };
 
+// ✅ Get Logged-in User Profile
+const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    const blogs = await Blog.find({ author: user.name });
+
+    res.json({
+      user,
+      blogs,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch profile", error: err.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  getUserProfile, // ✅ Export added function
 };
