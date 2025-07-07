@@ -27,7 +27,7 @@ function Login() {
 
       const data = await res.json();
       if (res.ok) {
-        login(data.user, data.token); // ✅ update context
+        login(data.user, data.token);
         alert("Login successful!");
         navigate("/");
       } else {
@@ -40,34 +40,61 @@ function Login() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow-md dark:bg-gray-800">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700 dark:text-white">Login</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-2 rounded border border-gray-300 focus:outline-none"
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-2 rounded border border-gray-300 focus:outline-none"
-        />
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-          Login
-        </button>
-      </form>
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-blue-200 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
+      <div className="w-full max-w-md p-8 rounded-2xl shadow-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border border-gray-200 dark:border-gray-700">
+        <h2 className="text-3xl font-extrabold mb-6 text-blue-700 dark:text-blue-400 text-center">
+          Welcome Back
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block mb-1 text-gray-700 dark:text-gray-200 font-medium" htmlFor="email">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              autoComplete="username"
+              placeholder="you@example.com"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 text-gray-700 dark:text-gray-200 font-medium" htmlFor="password">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              autoComplete="current-password"
+              placeholder="••••••••"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full py-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold shadow-lg transition-all duration-200 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+          >
+            Login
+          </button>
+        </form>
+        <div className="mt-6 text-center">
+          <span className="text-gray-600 dark:text-gray-400">Don't have an account?</span>
+          <a
+            href="/register"
+            className="ml-2 text-blue-600 dark:text-blue-400 hover:underline font-medium"
+          >
+            Register
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
