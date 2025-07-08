@@ -18,7 +18,7 @@ function EditBlog() {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/blogs/${id}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/blogs/${id}`);
         const data = await res.json();
 
         if (res.ok) {
@@ -49,7 +49,7 @@ function EditBlog() {
     }
 
     try {
-      const res = await fetch(`http://localhost:5000/api/blogs/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/blogs/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

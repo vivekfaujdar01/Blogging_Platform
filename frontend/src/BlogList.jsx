@@ -20,7 +20,7 @@ function BlogList({ blogs, searchQuery }) {
     if (!user) return alert("You must be logged in to delete a blog.");
     if (!window.confirm("Are you sure you want to delete this blog?")) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/blogs/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/blogs/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${user.token}`,
