@@ -16,7 +16,7 @@ function CreateBlog({ onBlogCreated }) {
     const newBlog = { title, content, author };
 
     try {
-      const response = await fetch("http://localhost:5000/api/blogs", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/blogs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
